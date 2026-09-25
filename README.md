@@ -14,64 +14,51 @@
 
 <br />
 
-[🚀 Demo Flow](#demo-flow) ·
+[🚀 Start Here](#start-here) ·
 [🧠 How It Works](#how-it-works) ·
-[🖥️ Screens](#screens) ·
+[🖥️ Product Screens](#product-screens) ·
+[🏗️ Architecture](#application-architecture) ·
 [⚙️ Run Locally](#run-locally) ·
-[🛡️ Safety & Scope](#safety--scope)
+[🛡️ Safety](#safety--scope)
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Educational portfolio prototype only.** MediTrial Navigator uses fictional/synthetic profiles and selected public ClinicalTrials.gov fields. It does not use real patient data, provide medical advice, diagnose conditions, recommend treatment, or determine real clinical-trial eligibility. All results require qualified human review.
+> **Educational portfolio prototype only.** MediTrial Navigator uses fictional/synthetic profiles and selected public ClinicalTrials.gov fields. It does not use real patient data, provide medical advice, diagnose conditions, recommend treatment, or determine actual clinical-trial eligibility. Every result requires qualified human review.
 
-## The Challenge
+## Start Here
 
-Clinical-trial records contain many fields: conditions, recruitment status, age requirements, sex eligibility, locations, and detailed inclusion/exclusion criteria.
+MediTrial Navigator is an explainable Flask + SQLite prototype that demonstrates how public clinical-trial information can be organized for **early-stage discovery**.
 
-A study title alone cannot determine whether a person can participate. MediTrial Navigator demonstrates how an explainable data application can organize selected public trial fields, compare them with a **synthetic profile**, and clearly show the evidence behind each result.
+The application accepts a **fictional profile** and compares it with selected public study fields, including:
 
-> **The goal is not to make an eligibility decision.**  
-> The goal is to support early-stage trial discovery with transparent evidence and clear human-review boundaries.
+- Trial condition
+- Recruitment status
+- Available age range
+- Available sex requirement
+- Source trial identifier, also called an NCT ID
 
-## What It Does
+Instead of providing an unsupported clinical conclusion, the system generates a transparent prototype label, explains the evidence it used, and links the reviewer to the public ClinicalTrials.gov study record.
 
-<table>
-<tr>
-<td width="50%">
+### What problem does it address?
 
-### 🧪 Uses synthetic profiles
+Clinical-trial information can be difficult to review quickly because each public record can contain many different fields, requirements, and details. A trial title alone cannot establish whether someone can take part.
 
-The application works with fictional profiles such as `SYN008`. This protects privacy and makes the project appropriate for safe educational and portfolio use.
+This project demonstrates a safer approach:
 
-</td>
-<td width="50%">
+```text
+Public trial fields + fictional profile
+                ↓
+Transparent, rule-based comparison
+                ↓
+Evidence-rich result for human review
+                ↓
+Public source record for verification
+```
 
-### 🔎 Screens public study fields
-
-The matching logic compares available trial information such as condition relationship, age range, recruitment status, and sex eligibility.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🧠 Explains each result
-
-Every trial card includes a prototype score and plain-language evidence explaining why the record was surfaced, rejected, or routed for review.
-
-</td>
-<td width="50%">
-
-### 🔗 Preserves traceability
-
-Every displayed trial links directly to its public ClinicalTrials.gov record for human verification.
-
-</td>
-</tr>
-</table>
+> **Important:** The project does not decide whether a person is eligible. It supports preliminary discovery and human review only.
 
 ## Demo Flow
 
@@ -79,15 +66,15 @@ Every displayed trial links directly to its public ClinicalTrials.gov record for
 flowchart LR
     A["👤 Select fictional profile"] --> B["✅ Validate synthetic-only input"]
     B --> C["🗃️ Load prepared public trial records"]
-    C --> D["⚙️ Apply transparent matching rules"]
-    D --> E["📝 Create evidence + prototype score"]
+    C --> D["⚙️ Apply explainable rules"]
+    D --> E["📝 Build evidence + score"]
     E --> F{"Prototype result"}
 
     F -->|"Available fields align"| G["🟢 Potential Match"]
     F -->|"Information is incomplete"| H["🟡 Needs Human Review"]
     F -->|"Available field conflicts"| I["🔴 Likely Not Match"]
 
-    G --> J["🔗 Open ClinicalTrials.gov record"]
+    G --> J["🔗 Review public ClinicalTrials.gov record"]
     H --> J
     I --> J
 
@@ -102,50 +89,97 @@ flowchart LR
     style J fill:#EAF5FF,stroke:#1976A5,stroke-width:2px
 ```
 
+## What It Does
+
+<table>
+<tr>
+<td width="50%">
+
+### 🧪 Synthetic-data design
+
+The application uses fictional profiles only. It is intentionally designed not to request, store, or process real patient information.
+
+</td>
+<td width="50%">
+
+### 🔎 Public trial discovery
+
+The application displays selected fields prepared from public ClinicalTrials.gov study records.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🧠 Explainable prototype results
+
+Each result includes a label, prototype score, and plain-language evidence so the screening logic is visible.
+
+</td>
+<td width="50%">
+
+### 🔗 Source traceability
+
+Every result links to its public ClinicalTrials.gov record so a reviewer can verify the original source information.
+
+</td>
+</tr>
+</table>
+
 ## How It Works
 
-### 1. Select a fictional profile
+### 1. Enter a fictional profile
 
-The user selects a pre-created synthetic profile. The application is designed not to request, store, or process real patient information.
+The first screen accepts a fictional profile with selected, limited fields. The interface includes an explicit synthetic-data warning and gives examples of acceptable fictional values.
+
+<p align="center">
+  <img
+    src="images/home-profile-selection.jpg"
+    alt="MediTrial Navigator fictional profile form showing synthetic-data-only warning"
+    width="850"
+  />
+</p>
+
+Example fictional profile:
 
 ```text
-Example synthetic profile
-──────────────────────────────────────
-Profile ID: SYN008
-Age:        49
-Sex:        Male
-Condition:  Type 2 diabetes
-──────────────────────────────────────
+Synthetic patient ID: SYN008
+Age:                  49
+Sex:                  Male
+State:                New Jersey
+Primary condition:    Type 2 diabetes
+Medication summary:   Example fictional medication only
+HbA1c:                8.2
 ```
 
-### 2. Review available public trial fields
+### 2. Review selected public fields
 
-The app uses selected structured fields prepared from public ClinicalTrials.gov records.
+The matching logic compares the fictional profile with selected fields from public trial records.
 
-| Field | Example displayed | Why it is useful |
+| Field | Example displayed by the app | Purpose |
 |---|---|---|
-| Trial condition | Type 2 diabetes | Checks whether the study topic relates to the synthetic profile’s primary condition |
-| Recruitment status | Recruiting | Indicates whether the public record lists the study as recruiting |
-| Available age range | 18 to 75 | Checks whether the profile falls within the published age range |
-| Sex eligibility | All / Male / Female / Not specified | Identifies a possible restriction when public information is available |
-| NCT ID | `NCT06688461` | Creates traceability back to the source record |
+| Primary condition | Type 2 diabetes | Checks whether the public trial topic relates to the fictional profile |
+| Recruitment status | Recruiting | Shows the status available in the public record |
+| Available age range | 18 to 75 | Checks whether the profile age fits the published range |
+| Sex eligibility | All / Male / Female / Not specified | Identifies an available restriction, when present |
+| NCT ID | `NCT06688461` | Connects a result to its original public trial record |
 
-### 3. Apply transparent rules
+### 3. Use transparent rules
 
-The application intentionally uses explainable rule-based logic rather than a black-box model.
+MediTrial Navigator intentionally uses explainable rule-based logic rather than an opaque prediction model.
 
 ```mermaid
 flowchart TD
     A["Synthetic profile + public trial record"] --> B{"Is the available condition related?"}
 
     B -->|"No"| C["🔴 Likely Not Match<br/>Prototype score: 0"]
-    B -->|"Yes"| D{"Is age within the available range?"}
+    B -->|"Yes"| D{"Is age in the available range?"}
 
     D -->|"No"| E["🔴 Likely Not Match"]
     D -->|"Yes"| F{"Is an available restriction compatible?"}
 
     F -->|"No"| G["🔴 Likely Not Match"]
-    F -->|"Missing or ambiguous"| H["🟡 Needs Human Review"]
+    F -->|"Missing / ambiguous"| H["🟡 Needs Human Review"]
     F -->|"Compatible or no restriction shown"| I["🟢 Potential Match"]
 
     C --> J["Show evidence + public source link"]
@@ -162,66 +196,75 @@ flowchart TD
     style J fill:#EAF5FF,stroke:#1976A5,stroke-width:2px
 ```
 
-### 4. Show evidence, not a clinical decision
+### 4. Explain the result
 
-| Label | Meaning | Does not mean |
+The app shows evidence rather than making a clinical decision.
+
+| Prototype label | What it means | What it does **not** mean |
 |---|---|---|
-| 🟢 **Potential Match** | The visible public fields support additional human review | Confirmed eligibility or enrollment approval |
-| 🟡 **Needs Human Review** | The available information is incomplete, uncertain, or requires professional interpretation | Eligibility or ineligibility |
-| 🔴 **Likely Not Match** | An available public field conflicts with the synthetic profile | A medical diagnosis or final decision |
+| 🟢 **Potential Match** | Available public fields support further human review | Confirmed eligibility or enrollment approval |
+| 🟡 **Needs Human Review** | Available information is missing, unclear, or needs qualified interpretation | Eligible or ineligible |
+| 🔴 **Likely Not Match** | An available public field conflicts with the synthetic profile | A medical diagnosis or final eligibility decision |
 
-## Screens
+## Product Screens
 
-### Potential trial results
+### Potential trial matches
 
-The main results view presents candidate public studies with a clear match label, prototype score, recruitment status, available age range, evidence bullets, and a direct source link.
+The results screen displays trial cards with a visible prototype label, score, NCT ID, recruitment status, age range, evidence bullets, and a direct link to the public ClinicalTrials.gov record.
 
 <p align="center">
   <img
     src="images/results-potential-matches.jpg"
-    alt="MediTrial Navigator potential trial results for a synthetic profile"
+    alt="MediTrial Navigator potential trial results with transparent evidence and public source links"
     width="850"
   />
 </p>
 
-### Evidence-rich trial cards
+### Why evidence matters
 
-Each result card explains the available evidence used by the prototype. This makes the logic inspectable and helps a reviewer understand why the trial was shown.
+A score alone is not enough. Each card explains the available factors that supported the result:
 
-<p align="center">
-  <img
-    src="images/results-match-cards.jpg"
-    alt="MediTrial Navigator trial cards with scores, evidence, and ClinicalTrials.gov links"
-    width="850"
-  />
-</p>
+```text
+✓ The available condition is related to the profile condition.
+✓ The profile age is within the published trial age range.
+✓ No restrictive sex requirement is available in the record.
+✓ The full eligibility criteria require qualified human review.
+```
+
+This approach makes it possible for a reviewer to understand the source of the result before opening the original study record.
 
 ## Safety Validation
 
-A good screening prototype must support safe negative outcomes, not just positive-looking results.
+A trustworthy screening prototype must show appropriate **non-match** behavior, not only positive-looking results.
 
-The project includes a Type 3 diabetes **synthetic profile** test case. Because the available study condition fields did not match the profile’s primary condition, the system produced **Likely Not Match** results with a prototype score of 0 and a clear condition-mismatch explanation.
+This project includes a safety-case test using a fictional Type 3 diabetes profile. The public trials shown in the test have available condition fields that do not match the synthetic profile’s primary condition. The app therefore produces:
 
-This safety evidence is stored separately as a PDF:
+```text
+Result label:     Likely Not Match
+Prototype score:  0
+Reason:           Primary condition does not match the available trial condition.
+```
+
+The full three-page safety validation output is included in this repository:
 
 ```text
 docs/meditrial-safety-test-likely-not-match.pdf
 ```
 
 > [!TIP]
-> This test case demonstrates a critical design principle: the application should not claim someone is a potential fit merely because a trial title contains a related term such as “diabetes.”
+> This demonstrates an important product safeguard: a study should not be surfaced as a potential match merely because its title includes a broad related term such as “diabetes.”
 
 ## Application Architecture
 
 ```mermaid
 flowchart TB
     U["👤 User"]
-    UI["🖥️ Flask web interface<br/>Profile selection + results"]
-    V["🛡️ Validation layer<br/>Synthetic-only checks"]
-    M["🧠 Explainable matching engine<br/>Rule-based scoring"]
-    DB[("🗃️ SQLite database<br/>Trials · profiles · audit logs")]
+    UI["🖥️ Flask web interface<br/>Synthetic-profile form + results"]
+    V["🛡️ Validation layer<br/>Synthetic-only input checks"]
+    M["🧠 Explainable matching engine<br/>Rule-based comparison"]
+    DB[("🗃️ SQLite database<br/>Trials · synthetic profiles · audit logs")]
     D["🌐 Public ClinicalTrials.gov data"]
-    R["📋 Evidence-rich result cards<br/>Label · score · reason · source"]
+    R["📋 Evidence-rich results<br/>Label · score · evidence · source link"]
     H["👩‍⚕️ Qualified human review"]
 
     U --> UI
@@ -244,49 +287,40 @@ flowchart TB
 
 ## Technology Stack
 
-| Area | Technology | Role |
+| Area | Technology | Purpose |
 |---|---|---|
-| Application | Python + Flask | Web routes, server-side logic, and rendered templates |
-| Data storage | SQLite | Stores trial records, synthetic profiles, matching results, and logs |
-| Public data | ClinicalTrials.gov | Provides public study information and source records |
-| Matching logic | Python | Applies transparent, deterministic prototype rules |
-| User interface | HTML, CSS, Jinja | Builds the website and result cards |
-| Testing | Pytest | Tests matching behavior and validation rules |
+| Web application | Python + Flask | Routes, server-side processing, and HTML rendering |
+| Data storage | SQLite | Stores prepared trials, synthetic profiles, results, and audit information |
+| Data source | ClinicalTrials.gov | Provides public study information and source records |
+| Matching logic | Python | Applies deterministic, explainable screening rules |
+| Interface | HTML, CSS, Jinja templates | Creates the profile form and evidence-rich results cards |
+| Testing | Pytest | Supports validation and matching-rule testing |
 
 ## Project Structure
 
-> Update this folder tree if your real filenames differ.
-
 ```text
-YOUR-EXISTING-REPOSITORY-NAME/
+agentic-clinical-trial-matching/
 │
 ├── app.py
-├── matching.py
-├── database.py
-├── requirements.txt
 ├── README.md
+├── requirements.txt
+├── .gitignore
 │
-├── data/
-│   └── trials.db
-│
-├── templates/
-│   ├── base.html
-│   ├── index.html
-│   ├── results.html
-│   └── about.html
-│
+├── data_raw/
+├── data_processed/
+├── database/
+├── notebooks/
+├── src/
 ├── static/
-│   └── styles.css
+├── templates/
+├── tests/
 │
 ├── images/
-│   ├── results-potential-matches.jpg
-│   └── results-match-cards.jpg
+│   ├── home-profile-selection.jpg
+│   └── results-potential-matches.jpg
 │
-├── docs/
-│   └── meditrial-safety-test-likely-not-match.pdf
-│
-└── tests/
-    └── test_matching.py
+└── docs/
+    └── meditrial-safety-test-likely-not-match.pdf
 ```
 
 ## Run Locally
@@ -294,11 +328,11 @@ YOUR-EXISTING-REPOSITORY-NAME/
 ### 1. Clone the repository
 
 ```bash
-git clone [https://github.com/YOUR-GITHUB-USERNAME/YOUR-EXISTING-REPOSITORY-NAME.git](https://github.com/YOUR-GITHUB-USERNAME/YOUR-EXISTING-REPOSITORY-NAME.git)
-cd YOUR-EXISTING-REPOSITORY-NAME
+git clone [https://github.com/vivek0717/agentic-clinical-trial-matching.git](https://github.com/vivek0717/agentic-clinical-trial-matching.git)
+cd agentic-clinical-trial-matching
 ```
 
-### 2. Create and activate a virtual environment
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
@@ -316,23 +350,26 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install project dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the Flask application
+### 4. Run the application
 
 ```bash
-flask --app app run
+python app.py
 ```
 
-Visit the local application:
+Then open this address in your browser:
 
 ```text
-http://127.0.0.1:5000
+http://127.0.0.1:5000/
 ```
+
+> [!NOTE]
+> `127.0.0.1` is a local address. It works only on the computer running the Flask application. A public live-demo URL will be added after deployment.
 
 ### 5. Run tests
 
@@ -340,41 +377,51 @@ http://127.0.0.1:5000
 pytest
 ```
 
+## Live Demo
+
+🚧 **Deployment is in progress.** The prototype currently runs locally with Flask.
+
+When the app is deployed, this section will include a public demo button like this:
+
+```md
+[
+```
+
 ## Safety & Scope
 
 > [!WARNING]
-> MediTrial Navigator is a data and software portfolio demonstration, not clinical decision-support software.
+> MediTrial Navigator is an educational data-product and software portfolio demonstration. It is not clinical decision-support software.
 
 - Use only fictional or synthetic profile data.
 - Do not enter real patient information, medical records, or personally identifiable information.
-- The application does not provide medical advice, diagnosis, treatment recommendations, or definitive eligibility decisions.
-- Public trial fields can be incomplete, outdated, or insufficient to evaluate full study criteria.
-- A **Potential Match** indicates only that the displayed public fields support human review.
-- A **Likely Not Match** reflects the available public-field comparison and is not a medical determination.
-- A **Needs Human Review** label is used when the project should not guess.
+- The application does not provide medical advice, medical diagnosis, treatment recommendations, or final eligibility decisions.
+- Public trial fields may be incomplete, out of date, or insufficient to assess the full study protocol.
+- A **Potential Match** only indicates that the displayed public fields support additional human review.
+- A **Likely Not Match** reflects an available-field conflict and is not a clinical judgment.
+- A **Needs Human Review** label is used when the prototype should not guess.
 - Final eligibility and enrollment decisions must be made by qualified study staff and healthcare professionals.
-- Every result should be verified through the linked ClinicalTrials.gov record.
+- Each trial should be verified through the linked ClinicalTrials.gov public record.
 
 ## Test Scenarios
 
-| Scenario | Expected behavior |
+| Scenario | Expected system behavior |
 |---|---|
-| Synthetic adult profile with a related condition | May show potential matches for human review |
+| Synthetic adult profile with a related condition | May show potential matches for qualified human review |
 | Synthetic profile with a non-matching condition | Returns **Likely Not Match** |
-| Profile with missing relevant detail | Returns **Needs Human Review** rather than guessing |
-| Underage synthetic profile | Displays a validation response |
-| Non-synthetic ID | Blocks the input to preserve the synthetic-data-only boundary |
+| Synthetic profile with missing relevant information | Returns **Needs Human Review** instead of guessing |
+| Underage synthetic profile | Shows a validation response |
+| Non-synthetic profile identifier | Blocks the input to preserve the synthetic-data-only boundary |
 
 ## Future Improvements
 
-- [ ] Add study-location filtering
+- [ ] Add trial-location filtering
 - [ ] Add public-data refresh timestamps and provenance tracking
-- [ ] Improve handling of structured inclusion and exclusion criteria
+- [ ] Improve structured handling of inclusion and exclusion criteria
 - [ ] Expand unit and integration-test coverage
-- [ ] Add accessibility testing and WCAG improvements
-- [ ] Add data-quality metrics and monitoring
-- [ ] Deploy a synthetic-data-only demonstration version
-- [ ] Add a product walkthrough video or animated GIF
+- [ ] Add accessibility and WCAG-focused testing
+- [ ] Add data-quality monitoring metrics
+- [ ] Deploy a public synthetic-data-only demo
+- [ ] Add a short walkthrough video or animated product demo
 
 ## Data Attribution
 
