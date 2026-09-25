@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Potential Matches | MediTrial Navigator{% endblock %}
+
+{% block content %}
+<section class="results-heading">
+    <p class="eyebrow">Synthetic Profile Screening Result</p>
+    <h1>Potential trial results</h1>
+    <p>
+        Profile: {{ patient.patient_id }} · Age {{ patient.age }} ·
+        {{ patient.sex }} · {{ patient.condition }}
+    </p>
+</section>
+
+<section class="notice">
+    <strong>Human review required:</strong>
+    These results use limited public fields and transparent prototype rules.
+    They do not determine actual eligibility or provide medical guidance.
+</section>
+
+{% if results %}
+<section class="results-list">
+    {% for item in results %}
+    <article class="result-card">
+        <div class="result-topline">
+            <span class="status-pill status-{{ item.decision }}">
+                {{ item.decision.replace('_', ' ') }}
+            </span>
+            <span class="score">Prototype score: {{ item.score }}</span>
+        </div>
+
+        <h2>{{ item.trial.title }}</h2>
+
+        <dl class="trial-details">
+            <div>
+                <dt>NCT ID</dt>
+                <dd>{{ item.trial.nct_id }}</dd>
+            </div>
+            <div>
+                <dt>Recruitment status</dt>
+                <dd>{{ item.trial.status.replace('_', ' ') }}</dd>
+            </div>
+            <div>
+                <dt>Available age range</dt>
+                <dd>
+                    {{ item.trial.min_age_years if item.trial.min_age_years is not none else "Not specified" }}
+                    to
+                    {{ item.trial.max_age_years if item.trial.max_age_years is not none else "Not specified" }}
+                </dd>
+            </div>
+        </dl>
+
+        <h3>Available evidence</h3>
+        <ul>
+            {% for reason in item.reasons %}
+            <li>{{ reason }}</li>
+            {% endfor %}
+        </ul>
+
+        {% if item.missing_info %}
+        <h3>Information requiring review</h3>
+        <ul>
+            {% for missing_item in item.missing_info %}
+            <li>{{ missing_item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <a
+            class="source-link"
+            href="{{ item.trial.source_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            View public ClinicalTrials.gov record
+        </a>
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+<section class="empty-state">
+    <h2>No candidate trials found</h2>
+    <p>
+        No active public trial records matched the limited search criteria.
+        This does not mean a person is ineligible for trials.
+    </p>
+</section>
+{% endif %}
+
+<a class="secondary-button" href="{{ url_for('home') }}">
+    Screen another fictional profile
+</a>
+{% endblock %}

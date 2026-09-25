@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}About | MediTrial Navigator{% endblock %}
+
+{% block content %}
+<section class="content-page">
+    <p class="eyebrow">About This Project</p>
+    <h1>MediTrial Navigator</h1>
+
+    <p>
+        MediTrial Navigator is an educational portfolio prototype. It screens
+        public ClinicalTrials.gov records against fictional patient profiles
+        using simple, transparent rules.
+    </p>
+
+    <h2>What it checks</h2>
+    <ul>
+        <li>Available trial recruitment status</li>
+        <li>Related public condition text</li>
+        <li>Published minimum and maximum age fields</li>
+        <li>Available sex requirement fields</li>
+        <li>Whether eligibility text is available for human review</li>
+    </ul>
+
+    <h2>What it does not do</h2>
+    <ul>
+        <li>It does not diagnose a condition.</li>
+        <li>It does not recommend treatment.</li>
+        <li>It does not assess every eligibility rule.</li>
+        <li>It does not make a final enrollment or eligibility decision.</li>
+        <li>It does not use or accept real patient information.</li>
+    </ul>
+
+    <h2>Data source</h2>
+    <p>
+        Trial information is sourced from public ClinicalTrials.gov study
+        records and stored locally for this educational demonstration.
+    </p>
+</section>
+{% endblock %}

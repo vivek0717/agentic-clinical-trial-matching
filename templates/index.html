@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Synthetic Trial Search | MediTrial Navigator{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <p class="eyebrow">Educational Clinical-Trial Screening Prototype</p>
+    <h1>Find potential public trial matches</h1>
+    <p>
+        Enter a fictional profile to screen public ClinicalTrials.gov records
+        using transparent, rules-based checks.
+    </p>
+</section>
+
+<section class="notice">
+    <strong>Synthetic data only:</strong>
+    Do not enter your own information or anyone else's real health information.
+</section>
+
+{% if errors %}
+<section class="error-box" aria-live="polite">
+    <h2>Please correct the following</h2>
+    <ul>
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+<section class="form-card">
+    <h2>Fictional patient profile</h2>
+
+    <form action="{{ url_for('match') }}" method="post">
+        <div class="form-grid">
+            <div class="field">
+                <label for="patient_id">Synthetic patient ID</label>
+                <input
+                    id="patient_id"
+                    name="patient_id"
+                    value="{{ patient.get('patient_id', '') }}"
+                    placeholder="Example: SYN006"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="age">Age</label>
+                <input
+                    id="age"
+                    name="age"
+                    type="number"
+                    min="18"
+                    max="120"
+                    value="{{ patient.get('age', '') }}"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="sex">Sex</label>
+                <select id="sex" name="sex" required>
+                    <option value="">Select one</option>
+                    <option value="Female" {% if patient.get('sex') == 'Female' %}selected{% endif %}>Female</option>
+                    <option value="Male" {% if patient.get('sex') == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Unknown" {% if patient.get('sex') == 'Unknown' %}selected{% endif %}>Unknown / not provided</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="state">State</label>
+                <input
+                    id="state"
+                    name="state"
+                    value="{{ patient.get('state', '') }}"
+                    placeholder="Example: New Jersey"
+                    required
+                >
+            </div>
+
+            <div class="field field-wide">
+                <label for="condition">Primary condition</label>
+                <input
+                    id="condition"
+                    name="condition"
+                    value="{{ patient.get('condition', 'Type 2 diabetes') }}"
+                    required
+                >
+            </div>
+
+            <div class="field field-wide">
+                <label for="medications">Medication summary <span>(optional)</span></label>
+                <input
+                    id="medications"
+                    name="medications"
+                    value="{{ patient.get('medications', '') }}"
+                    placeholder="Example: Metformin; fictional medication only"
+                >
+            </div>
+
+            <div class="field">
+                <label for="hba1c">HbA1c <span>(optional)</span></label>
+                <input
+                    id="hba1c"
+                    name="hba1c"
+                    type="number"
+                    min="0"
+                    max="25"
+                    step="0.1"
+                    value="{{ patient.get('hba1c', '') }}"
+                    placeholder="Example: 8.2"
+                >
+            </div>
+        </div>
+
+        <button class="primary-button" type="submit">
+            Find potential trials
+        </button>
+    </form>
+</section>
+{% endblock %}

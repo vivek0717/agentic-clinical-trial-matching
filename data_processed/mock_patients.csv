@@ -1,0 +1,6 @@
+patient_id,age,sex,state,conditions,medications,hba1c,bmi,is_synthetic
+SYN001,58,Female,New Jersey,Type 2 diabetes; Hypertension,Metformin; Lisinopril,8.2,31.4,1
+SYN002,39,Male,New York,Type 2 diabetes,Metformin,7.1,27.8,1
+SYN003,76,Female,New Jersey,Type 2 diabetes,Insulin,9.4,29.1,1
+SYN004,22,Male,Pennsylvania,Type 1 diabetes,Insulin,8.7,24.6,1
+SYN005,64,Female,New Jersey,Hypertension,Amlodipine,,30.2,1
